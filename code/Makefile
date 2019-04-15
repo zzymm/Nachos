@@ -196,47 +196,158 @@
 MAKE=make --no-print-directory
 LPR=lpr
 
-all: 
-	@ echo "## threads"
-	@ $(MAKE) -C threads
-	@ echo "## userprog"
-	@ $(MAKE) -C userprog
-	@ echo "## vm"
-	@ $(MAKE) -C vm
-	@ echo "## filesys"
-	@ $(MAKE) -C filesys
-	@ echo "## network"
-	@ $(MAKE) -C network
-	@ echo "## bin"
-	@ $(MAKE) -C bin
-#	@ echo "## test"
-#	@ $(MAKE) -C test
 
-# don't delete executables in "test" in case there is no cross-compiler
-clean:
-	 rm -f *~ */{core,nachos,DISK,*.o,swtch.s,*~} test/{*.coff} bin/{coff2flat,coff2noff,disassemble,out}
 
-.PHONY: tags fmt ubuntu
+CPP= gcc -E
+CC = g++ -m32
+LD = g++ -m32
+AS = as --32
+MAKE = make
+
+PROGRAM = nachos
+
+THREAD_H =../threads/copyright.h\
+	../threads/list.h\
+	../threads/scheduler.h\
+	../threads/synch.h \
+	../threads/synchlist.h\
+	../threads/system.h\
+	../threads/thread.h\
+	../threads/utility.h\
+	../threads/mailbox.h\
+	../threads/mailboxTest.h\
+	../threads/whale.h\
+	../threads/whaleTest.h\
+	../machine/interrupt.h\
+	../machine/sysdep.h\
+	../machine/stats.h\
+	../machine/timer.h
+
+THREAD_C =../threads/main.cc\
+	../threads/list.cc\
+	../threads/scheduler.cc\
+	../threads/synch.cc \
+	../threads/synchlist.cc\
+	../threads/system.cc\
+	../threads/thread.cc\
+	../threads/utility.cc\
+	../threads/threadtest.cc\
+	../threads/mailbox.cc\
+	../threads/mailboxTest.cc\
+	../threads/whale.cc\
+	../threads/whaleTest.cc\
+	../machine/interrupt.cc\
+	../machine/sysdep.cc\
+	../machine/stats.cc\
+	../machine/timer.cc
+
+THREAD_S = ../threads/switch.s
+
+THREAD_O =main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
+	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o \
+	mailbox.o mailboxTest.o whale.o whaleTest.o
+
+USERPROG_H = ../userprog/addrspace.h\
+	../userprog/bitmap.h\
+	../userprog/memoryManager.h\
+	../userprog/table.h\
+	../userprog/synchconsole.h\
+	../userprog/process.h\
+	../userprog/pipe.h\
+	../userprog/backingstore.h\
+	../filesys/filesys.h\
+	../filesys/openfile.h\
+	../machine/console.h\
+	../machine/machine.h\
+	../machine/mipssim.h\
+	../machine/translate.h
+	
+
+USERPROG_C = ../userprog/addrspace.cc\
+	../userprog/bitmap.cc\
+	../userprog/table.cc\
+	../userprog/process.cc\
+	../userprog/exception.cc\
+	../userprog/progtest.cc\
+	../userprog/memoryManager.cc\
+	../userprog/synchconsole.cc\
+	../userprog/pipe.cc\
+	../userprog/backingstore.cc\
+	../machine/console.cc\
+	../machine/machine.cc\
+	../machine/mipssim.cc\
+	../machine/translate.cc
+	
+
+USERPROG_O = addrspace.o bitmap.o exception.o progtest.o console.o machine.o \
+	mipssim.o translate.o memoryManager.o table.o process.o synchconsole.o\
+	pipe.o backingstore.o
+
+VM_H = 
+VM_C = 
+VM_O = 
+
+FILESYS_H =../filesys/directory.h \
+	../filesys/filehdr.h\
+	../filesys/filesys.h \
+	../filesys/openfile.h\
+	../filesys/synchdisk.h\
+	../machine/disk.h
+FILESYS_C =../filesys/directory.cc\
+	../filesys/filehdr.cc\
+	../filesys/filesys.cc\
+	../filesys/fstest.cc\
+	../filesys/openfile.cc\
+	../filesys/synchdisk.cc\
+	../machine/disk.cc
+FILESYS_O =directory.o filehdr.o filesys.o fstest.o openfile.o synchdisk.o\
+	disk.o
+
+NETWORK_H = ../network/post.h ../machine/network.h
+NETWORK_C = ../network/nettest.cc ../network/post.cc ../machine/network.cc
+NETWORK_O = nettest.o post.o network.o
+
+S_OFILES = switch.o
+
+OFILES = $(C_OFILES) $(S_OFILES)
+
+all:
+	@ $(MAKE) depend --no-print-directory
+	@ $(MAKE) $(PROGRAM) --no-print-directory
+
+$(PROGRAM): $(OFILES)
+	@ echo $@
+	@ $(LD) $(OFILES) $(LDFLAGS) -o $(PROGRAM)
+
+$(C_OFILES): %.o:
+	@ echo $<
+	@ $(CC) $(CFLAGS) -c $<
+
+switch.o: ../threads/switch.s
+	@ echo $<
+	@ $(CPP) -P -x c $(INCPATH) $(HOST) ../threads/switch.s > swtch.s
+	@ $(AS) -o switch.o swtch.s
+
+depend: $(CFILES) $(HFILES)
+	@ echo building dependencies
+	@ $(CC) $(INCPATH) $(DEFINES) $(HOST) -DCHANGED -M $(CFILES) > deps.mk
+	@echo '/^# DO NOT DELETE THIS LINE/+1,$$d' >eddep
+	@echo '$$r makedep' >>eddep
+	@echo 'w' >>eddep
+	@echo 'q' >>eddep
+	ed - Makefile.dep < eddep
+	rm eddep deps.mk
+	@echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile.dep
+	@echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile.dep
+	@echo '# see make depend above' >> Makefile.dep
+
+.PHONY: fmt tags clean
+fmt:
+	astyle *.h *.cc -nQ
 
 tags:
-	ctags -h=.cc.h -R
+	ctags -h=.h.cc -R ..
 
-fmt:
-	astyle `find . -name *.c` `find . -name *.h` `find . -name *.cc` -nQ
-
-ubuntu:
-	sudo apt-get install gcc-multilib g++-multilib lib32stdc++6 
-
-print:
-	$(LPR) Makefile* */Makefile
-	$(LPR) threads/*.h threads/*.cc threads/*.s
-	$(LPR) userprog/*.h userprog/*.cc
-	$(LPR) filesys/*.h filesys/*.cc
-	$(LPR) network/*.h network/*.cc 
-	$(LPR) machine/*.h machine/*.cc
-	$(LPR) bin/noff.h bin/coff.h bin/coff2noff.c
-	$(LPR) test/*.h test/*.c test/*.s
-
-turnin: clean
-	cd .. && tar czf code.tgz code
-	turnin ../code.tgz
+#Ming
+clean:
+	rm -rf ../*~ ../*/{core,nachos,DISK,*.o,swtch.s,*~} ../test/{*.coff} ../bin/{coff2flat,disassemble,out}
