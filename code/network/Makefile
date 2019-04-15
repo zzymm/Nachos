@@ -21,6 +21,6 @@ C_OFILES = $(THREAD_O) $(USERPROG_O) $(VM_O) $(FILESYS_O) $(NETWORK_O)
 # CFILES = $(THREAD_C) $(NETWORK_C)
 # C_OFILES = $(THREAD_O) $(NETWORK_O)
 
-include ../Makefile.common
-include ../Makefile.dep
+include ../build.linux/Makefile.common
+include ../build.linux/Makefile.dep
 -include deps.mk

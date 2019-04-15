@@ -210,14 +210,12 @@ all:
 	@ $(MAKE) -C ../network
 	@ echo "## bin"
 	@ $(MAKE) -C ../bin
-#	@ echo "## test"
-#	@ $(MAKE) -C test
 	@ cp .././userprog/nachos ./
 
 # don't delete executables in "test" in case there is no cross-compiler
 clean:
 	@ rm -f ../*/*.o
-	@ rm ../*nachos
+	@ rm *nachos
 	@ rm ../*/*nachos
 
 .PHONY: tags fmt ubuntu
