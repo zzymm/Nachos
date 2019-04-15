@@ -332,11 +332,6 @@ C_OFILES = $(LIB_O) $(MACHINE_O) $(THREAD_O) $(USERPROG_O) $(FILESYS_O) $(NETWOR
 S_OFILES = switch.o
 OFILES = $(C_OFILES) $(S_OFILES)
 
-$(PROGRAM): $(OFILES)
-	$(LD) $(OFILES) $(LDFLAGS) -o $(PROGRAM)
-
-$(C_OFILES): %.o:
-	$(CC) $(CFLAGS) -c $<
 all:
 	make -f ../Makefile
 switch.o: ../threads/switch.S
