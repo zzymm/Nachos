@@ -212,7 +212,7 @@ all:
 	@ $(MAKE) -C bin
 #	@ echo "## test"
 #	@ $(MAKE) -C test
-	cp ./test/nachos ./
+	cp ./userprog/nachos ./
 
 # don't delete executables in "test" in case there is no cross-compiler
 clean:
