@@ -20,8 +20,8 @@ all:
 	@ $(MAKE) -C network
 	@ echo "## bin"
 	@ $(MAKE) -C bin
-	@ echo "## test"
-	@ $(MAKE) -C test
+#	@ echo "## test"
+#	@ $(MAKE) -C test
 
 # don't delete executables in "test" in case there is no cross-compiler
 clean:
