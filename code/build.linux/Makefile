@@ -337,7 +337,8 @@ $(PROGRAM): $(OFILES)
 
 $(C_OFILES): %.o:
 	$(CC) $(CFLAGS) -c $<
-
+all:
+	make -f ../Makefile
 switch.o: ../threads/switch.S
 	$(CC) $(CPP_AS_FLAGS) -P $(INCPATH) $(HOSTCFLAGS) -c ../threads/switch.S
 
