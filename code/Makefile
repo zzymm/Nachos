@@ -212,7 +212,7 @@ all:
 	@ $(MAKE) -C bin
 #	@ echo "## test"
 #	@ $(MAKE) -C test
-	cp ./userprog/nachos ./
+	@ cp ./userprog/nachos ./
 
 # don't delete executables in "test" in case there is no cross-compiler
 clean:
@@ -223,14 +223,14 @@ clean:
 .PHONY: tags fmt ubuntu
 
 depend: 
-	@echo '/^# DO NOT DELETE THIS LINE/+1,$$d' >eddep
-	@echo '$$r makedep' >>eddep
-	@echo 'w' >>eddep
-	@echo 'q' >>eddep
-	rm eddep
-	@echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile.dep
-	@echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile.dep
-	@echo '# see make depend above' >> Makefile.dep
+	@ echo '/^# DO NOT DELETE THIS LINE/+1,$$d' >eddep
+	@ echo '$$r makedep' >>eddep
+	@ echo 'w' >>eddep
+	@ echo 'q' >>eddep
+	@ rm eddep
+	@ echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile.dep
+	@ echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile.dep
+	@ echo '# see make depend above' >> Makefile.dep
 
 tags:
 	ctags -h=.cc.h -R
