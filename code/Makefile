@@ -216,7 +216,6 @@ all:
 
 # don't delete executables in "test" in case there is no cross-compiler
 clean:
-	@ echo $(find ./ -name *.o)
 	@ rm -f */*.o
 	@ rm nachos
 
