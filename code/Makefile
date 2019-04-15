@@ -225,7 +225,6 @@ depend:
 	@echo '$$r makedep' >>eddep
 	@echo 'w' >>eddep
 	@echo 'q' >>eddep
-	ed - Makefile.dep < eddep
 	rm eddep
 	@echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile.dep
 	@echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile.dep
