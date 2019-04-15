@@ -25,6 +25,6 @@ C_OFILES = $(THREAD_O) $(USERPROG_O) $(VM_O)
 # CFILES = $(THREAD_C) $(USERPROG_C) $(FILESYS_C) $(VM_C)
 # C_OFILES = $(THREAD_O) $(USERPROG_O) $(FILESYS_O) $(VM_O)
 
-include ../Makefile.common
-include ../Makefile.dep
+include ../build.linux/Makefile.common
+include ../build.linux/Makefile.dep
 -include deps.mk
