@@ -1,2 +1,2 @@
 # Nachos
-	this is a tiny system simulate written by c++
+this is a tiny system simulate written by c++
